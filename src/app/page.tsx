@@ -1,5 +1,5 @@
 "use client";
-import { type ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { SocketSetup } from "./socket-setup";
 import { ulid } from "ulid";
 

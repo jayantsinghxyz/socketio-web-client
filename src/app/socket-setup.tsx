@@ -1,4 +1,5 @@
 "use client";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { type FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { io, type Socket } from "socket.io-client";
@@ -19,15 +20,17 @@ interface Props {
 	isOpen: boolean;
 }
 
-export const SocketSetup: FC<Props> = ({ id, isOpen }) => {
+export const SocketSetup: FC<Props> = ({ isOpen }) => {
 	const [socket, setSocket] = useState<Socket | null>(null);
 	const [isConnected, setIsConnected] = useState<boolean>(false);
 	const {
 		register,
-		setValue,
+		// setValue,
 		handleSubmit,
-		formState: { errors },
-	} = useForm<IFormSchema>();
+		// formState: {},
+	} = useForm<IFormSchema>({
+		resolver: zodResolver(formSchema),
+	});
 	const onSubmit = handleSubmit((data) => {
 		initSocket(data);
 	});
@@ -74,18 +77,22 @@ export const SocketSetup: FC<Props> = ({ id, isOpen }) => {
 			<input type="checkbox" checked={isConnected} />
 			<form onSubmit={onSubmit} className="flex flex-col gap-4">
 				<div>
-					<label>URL</label>
-					<input
-						{...register("url")}
-						className="border border-neutral-800 rounded-md px-4 py-3"
-					/>
+					<label>
+						URL
+						<input
+							{...register("url")}
+							className="border border-neutral-800 rounded-md px-4 py-3"
+						/>
+					</label>
 				</div>
 				<div>
-					<label>Auth token</label>
-					<input
-						{...register("auth.token")}
-						className="border border-neutral-800 rounded-md px-4 py-3"
-					/>
+					<label>
+						Auth token
+						<input
+							{...register("auth.token")}
+							className="border border-neutral-800 rounded-md px-4 py-3"
+						/>
+					</label>
 				</div>
 				<button type="submit">CONNECT</button>
 			</form>
